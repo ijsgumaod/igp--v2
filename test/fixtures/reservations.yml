@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  guest_id: 1
+  reserve_date_from: 2018-03-15 03:26:21
+  reserve_date_to: 2018-03-15 03:26:21
+
+two:
+  guest_id: 1
+  reserve_date_from: 2018-03-15 03:26:21
+  reserve_date_to: 2018-03-15 03:26:21
