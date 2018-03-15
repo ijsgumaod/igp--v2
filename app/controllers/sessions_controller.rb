@@ -1,8 +1,13 @@
 class SessionsController < ApplicationController
-  skip_before_action :require_login, except: [:destroy]
+  #skip_before_action :require_login, except: [:destroy]
 
-  def new
-
+  def authenticate_user
+    user = User.find_by_username(params[:username])
+    if login(user.username, params[:password])
+      render json: payload(user)
+    else
+      render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
+    end
   end
 
   def create
@@ -19,5 +24,14 @@ class SessionsController < ApplicationController
     logout
     flash[:success] = "See you!"
     redirect_to login_path
+  end
+
+  private
+  def payload(user)
+    return nil unless user and user.id
+    {
+      auth_token: JsonWebToken.encode({user_id: user.id}),
+      user: {id: user.id, email: user.email}
+    }
   end
 end
