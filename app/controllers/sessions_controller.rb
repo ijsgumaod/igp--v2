@@ -2,9 +2,11 @@ class SessionsController < ApplicationController
   #skip_before_action :require_login, except: [:destroy]
 
   def authenticate_user
-    user = User.find_by_username(params[:username])
-    if login(user.username, params[:password])
+    #@user = User.find_by_username(params[:username])
+
+    if user = login(params[:username], params[:password])
       render json: payload(user)
+      #redirect_to reservations_path
     else
       render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
     end
@@ -31,7 +33,7 @@ class SessionsController < ApplicationController
     return nil unless user and user.id
     {
       auth_token: JsonWebToken.encode({user_id: user.id}),
-      user: {id: user.id, email: user.email}
+      user: {id: user.id, username: user.username}
     }
   end
 end

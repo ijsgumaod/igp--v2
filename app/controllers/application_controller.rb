@@ -1,12 +1,13 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
+  #protect_from_forgery with: :exception
   #before_action :require_login
   attr_reader :current_user
 
   protected
   def authenticate_request!
-    unless user_id_in_token
+    unless user_id_in_token?
       render json: { errors: ['Not Authenticated'] }, status: :unauthorized
+      #redirect_to login_path
       return
     end
     @current_user = User.find(auth_token[:user_id])
@@ -25,7 +26,7 @@ class ApplicationController < ActionController::Base
     @auth_token ||= JsonWebToken.decode(http_token)
   end
 
-  def user_id_in_token
+  def user_id_in_token?
     http_token && auth_token && auth_token[:user_id] .to_i
   end
 
